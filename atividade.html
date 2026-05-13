@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Necessidades Físicas na Atividade Física</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --teal-dark: #0f766e;
+    --navy: #0f2942;
+    --navy-mid: #1e3a5f;
+    --accent: #f59e0b;
+    --bg: #f0f9ff;
+    --white: #ffffff;
+    --grey: #64748b;
+    --grey-light: #e2e8f0;
+    --correct: #16a34a;
+    --correct-bg: #dcfce7;
+    --wrong: #dc2626;
+    --wrong-bg: #fee2e2;
+    --pending: #d97706;
+    --pending-bg: #fef3c7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--navy);
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--teal-dark) 100%);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.08);
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(13,148,136,0.15);
+  }
+
+  .header-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(245,158,11,0.2);
+    color: var(--accent);
+    border: 1px solid rgba(245,158,11,0.4);
+    padding: 0.25rem 0.85rem;
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    color: white;
+    font-size: 1.85rem;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.9rem;
+    font-weight: 300;
+    max-width: 540px;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat-num {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .stat-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.78rem;
+  }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+  .instructions {
+    background: white;
+    border-left: 4px solid var(--teal);
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .instructions .icon { font-size: 1.3rem; margin-top: 0.1rem; }
+
+  .instructions p {
+    font-size: 0.88rem;
+    color: var(--grey);
+    line-height: 1.6;
+  }
+
+  .instructions strong { color: var(--navy); }
+
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--grey);
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .dot-locked { background: #e2e8f0; border: 1px solid #cbd5e1; }
+  .dot-answer { background: #fef9c3; border: 1px solid #fde68a; }
+
+  .table-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%);
+  }
+
+  th {
+    color: white;
+    font-weight: 500;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    padding: 0.85rem 0.75rem;
+    text-align: left;
+    vertical-align: bottom;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  th:last-child { border-right: none; }
+
+  th.col-need {
+    width: 160px;
+    background: rgba(0,0,0,0.2);
+  }
+
+  tbody tr:nth-child(odd) { background: #fafcff; }
+  tbody tr:nth-child(even) { background: white; }
+  tbody tr { transition: background 0.2s; }
+  tbody tr:hover { background: #f0f9ff; }
+
+  td {
+    padding: 0.7rem 0.75rem;
+    vertical-align: top;
+    border-right: 1px solid var(--grey-light);
+    border-bottom: 1px solid var(--grey-light);
+    font-size: 0.8rem;
+    line-height: 1.55;
+  }
+
+  td:last-child { border-right: none; }
+
+  td.need-label {
+    font-weight: 600;
+    color: var(--navy-mid);
+    font-size: 0.82rem;
+    background: linear-gradient(90deg, #f0f9ff, transparent);
+    border-left: 3px solid var(--teal);
+    padding-left: 0.85rem;
+  }
+
+  td.locked {
+    color: #374151;
+    background: inherit;
+  }
+
+  td.answer-cell {
+    background: #fefce8;
+    padding: 0.5rem 0.6rem;
+  }
+
+  td.correct-cell { background: var(--correct-bg) !important; }
+  td.wrong-cell { background: var(--wrong-bg) !important; }
+
+  select {
+    width: 100%;
+    padding: 0.45rem 0.55rem;
+    border: 1.5px solid #fcd34d;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.76rem;
+    color: var(--navy);
+    background: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 1.75rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.15);
+  }
+
+  select.correct {
+    border-color: var(--correct);
+    background-color: var(--correct-bg);
+    color: var(--correct);
+    font-weight: 500;
+    pointer-events: none;
+  }
+
+  select.wrong {
+    border-color: var(--wrong);
+    background-color: var(--wrong-bg);
+    color: var(--wrong);
+  }
+
+  .feedback-icon {
+    display: none;
+    font-size: 0.9rem;
+    margin-top: 0.35rem;
+    font-weight: 500;
+  }
+
+  .feedback-icon.correct { display: block; color: var(--correct); }
+  .feedback-icon.wrong { display: block; color: var(--wrong); }
+  .correct-answer {
+    display: none;
+    font-size: 0.72rem;
+    margin-top: 0.35rem;
+    color: var(--correct);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .correct-answer.show { display: block; }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-reset {
+    background: white;
+    color: var(--navy);
+    border: 1.5px solid var(--grey-light);
+  }
+
+  .btn-reset:hover {
+    background: var(--grey-light);
+    border-color: #94a3b8;
+  }
+
+  .btn-check {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(13,148,136,0.35);
+    letter-spacing: 0.02em;
+  }
+
+  .btn-check:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(13,148,136,0.45);
+  }
+
+  .btn-check:active { transform: translateY(0); }
+
+  .score-panel {
+    display: none;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+    border-top: 4px solid var(--teal);
+  }
+
+  .score-panel.show { display: block; }
+
+  .score-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .score-emoji { font-size: 2.5rem; }
+
+  .score-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--navy);
+  }
+
+  .score-sub {
+    font-size: 0.85rem;
+    color: var(--grey);
+    margin-top: 0.2rem;
+  }
+
+  .score-bar-wrap {
+    background: var(--grey-light);
+    border-radius: 99px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+  }
+
+  .score-bar {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--accent));
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+
+  .score-numbers {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--grey);
+  }
+
+  .score-big {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--teal);
+  }
+
+  .progress-text { font-size: 0.78rem; color: var(--grey); margin-bottom: 0.25rem; }
+
+  @media (max-width: 700px) {
+    header h1 { font-size: 1.35rem; }
+    th, td { font-size: 0.72rem; padding: 0.55rem 0.5rem; }
+    .actions { justify-content: stretch; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="badge">📋 Atividade de Aprendizagem</div>
+    <h1>Necessidades Físicas na Atividade Física<br>por Grupos Populacionais</h1>
+    <p>Identifique as recomendações corretas para cada grupo. Selecione a opção mais adequada em cada célula assinalada.</p>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num">8</span>
+        <span class="stat-label">necessidades</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">grupos populacionais</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="totalQ">11</span>
+        <span class="stat-label">questões</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="instructions">
+    <div class="icon">💡</div>
+    <p><strong>Como fazer:</strong> As células a <strong style="color:#854d0e">fundo amarelo</strong> são as que deve preencher. Escolha a opção mais adequada no menu e clique em <strong>Verificar Respostas</strong> no final. As respostas corretas ficam a verde e as erradas a vermelho.</p>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="dot dot-locked"></div> Célula preenchida (referência)</div>
+    <div class="legend-item"><div class="dot dot-answer"></div> Célula a completar</div>
+  </div>
+
+  <div id="scorePanelTop" class="score-panel">
+    <div class="score-header">
+      <div class="score-emoji" id="emojiTop">🎯</div>
+      <div>
+        <div class="score-title" id="scoreTitleTop">Resultado</div>
+        <div class="score-sub" id="scoreSubTop"></div>
+      </div>
+      <div style="margin-left:auto; text-align:right;">
+        <div class="score-big" id="scoreBigTop">0/11</div>
+      </div>
+    </div>
+    <div class="progress-text" id="progressTextTop"></div>
+    <div class="score-bar-wrap"><div class="score-bar" id="scoreBarTop"></div></div>
+    <div class="score-numbers"><span>0%</span><span id="pctTop">0%</span><span>100%</span></div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="mainTable">
+      <thead>
+        <tr>
+          <th class="col-need">Necessidades Físicas</th>
+          <th>Mulher<br><small style="font-weight:300;opacity:0.8">(Gravidez, Pós-parto, Menopausa)</small></th>
+          <th>Crianças e Adolescentes</th>
+          <th>Idosos</th>
+          <th>Grupos em Vulnerabilidade Social</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ROW 1: Sono e descanso -->
+        <tr>
+          <td class="need-label">1. Sono e descanso</td>
+          <td class="answer-cell" data-id="1a">
+            <select data-correct="Respeitar fadiga gestacional; evitar treinos tardios">
+              <option value="">— selecione —</option>
+              <option>Respeitar fadiga gestacional; evitar treinos tardios</option>
+              <option>Hidratação rigorosa; pequenas refeições prévias ao exercício</option>
+              <option>Evitar risco de quedas; supervisionar movimentos com impacto</option>
+              <option>Atenção ao desconforto articular ou mamário; adaptação de movimentos</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Evitar sobrecarga; garantir tempo de recuperação</td>
+          <td class="locked">Respeitar ritmo biológico; evitar esforço em horários extremos</td>
+          <td class="answer-cell" data-id="1b">
+            <select data-correct="Adaptar horários conforme contexto de vida; garantir pausas">
+              <option value="">— selecione —</option>
+              <option>Adaptar horários conforme contexto de vida; garantir pausas</option>
+              <option>Considerar limitações de mobilidade ou barreiras culturais</option>
+              <option>Garantir acesso básico à água e nutrição prévia</option>
+              <option>Evitar discriminação; garantir espaços acessíveis e seguros</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+        </tr>
+
+        <!-- ROW 2: Higiene pessoal e vestir-se -->
+        <tr>
+          <td class="need-label">2. Higiene pessoal e vestir-se</td>
+          <td class="locked">Roupas confortáveis e adaptadas ao corpo; higiene após exercício</td>
+          <td class="answer-cell" data-id="2a">
+            <select data-correct="Promover higiene após esforço; respeitar privacidade">
+              <option value="">— selecione —</option>
+              <option>Promover higiene após esforço; respeitar privacidade</option>
+              <option>Supervisão constante; espaços seguros e apropriados</option>
+              <option>Estimular coordenação e motricidade fina e grossa</option>
+              <option>Evitar sobrecarga; garantir tempo de recuperação</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Evitar riscos de infeção; facilitar higiene após atividade</td>
+          <td class="locked">Acesso facilitado a condições de higiene dignas e seguras</td>
+        </tr>
+
+        <!-- ROW 3: Gestão da medicação -->
+        <tr>
+          <td class="need-label">3. Gestão da medicação</td>
+          <td class="locked">Considerar terapêutica hormonal, analgésica ou suplementar</td>
+          <td class="locked">Monitorizar uso de inaladores ou outros fármacos</td>
+          <td class="answer-cell" data-id="3a">
+            <select data-correct="Ajustar atividade à toma de medicamentos (ex: anti-hipertensivos)">
+              <option value="">— selecione —</option>
+              <option>Ajustar atividade à toma de medicamentos (ex: anti-hipertensivos)</option>
+              <option>Garantir controlo glicémico (ex: diabéticos); encorajar hidratação</option>
+              <option>Priorizar equilíbrio, força e resistência funcional</option>
+              <option>Respeitar ritmo biológico; evitar esforço em horários extremos</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Ter em conta interações medicamentosas ou regimes complexos</td>
+        </tr>
+
+        <!-- ROW 4: Necessidades de eliminação -->
+        <tr>
+          <td class="need-label">4. Necessidades de eliminação</td>
+          <td class="answer-cell" data-id="4a">
+            <select data-correct="Evitar pressão sobre pavimento pélvico; pausas planeadas">
+              <option value="">— selecione —</option>
+              <option>Evitar pressão sobre pavimento pélvico; pausas planeadas</option>
+              <option>Respeitar fadiga gestacional; evitar treinos tardios</option>
+              <option>Atenção ao desconforto articular ou mamário; adaptação de movimentos</option>
+              <option>Hidratação rigorosa; pequenas refeições prévias ao exercício</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Garantir acesso fácil a casas de banho antes e durante</td>
+          <td class="locked">Adaptar a atividade à incontinência; evitar retenção</td>
+          <td class="answer-cell" data-id="4b">
+            <select data-correct="Considerar limitações de mobilidade ou barreiras culturais">
+              <option value="">— selecione —</option>
+              <option>Considerar limitações de mobilidade ou barreiras culturais</option>
+              <option>Adaptar horários conforme contexto de vida; garantir pausas</option>
+              <option>Garantir acesso básico à água e nutrição prévia</option>
+              <option>Atividade ajustada ao grau de mobilidade e à cultura do grupo</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+        </tr>
+
+        <!-- ROW 5: Alimentação e hidratação -->
+        <tr>
+          <td class="need-label">5. Alimentação e hidratação</td>
+          <td class="locked">Hidratação rigorosa; pequenas refeições prévias ao exercício</td>
+          <td class="answer-cell" data-id="5a">
+            <select data-correct="Refeições leves e hidratação adequada antes da atividade">
+              <option value="">— selecione —</option>
+              <option>Refeições leves e hidratação adequada antes da atividade</option>
+              <option>Evitar sobrecarga; garantir tempo de recuperação</option>
+              <option>Supervisão constante; espaços seguros e apropriados</option>
+              <option>Promover higiene após esforço; respeitar privacidade</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Garantir controlo glicémico (ex: diabéticos); encorajar hidratação</td>
+          <td class="locked">Garantir acesso básico à água e nutrição prévia</td>
+        </tr>
+
+        <!-- ROW 6: Conforto -->
+        <tr>
+          <td class="need-label">6. Conforto</td>
+          <td class="locked">Atenção ao desconforto articular ou mamário; adaptação de movimentos</td>
+          <td class="locked">Evitar dor muscular; ambiente agradável e lúdico</td>
+          <td class="answer-cell" data-id="6a">
+            <select data-correct="Proteger articulações; uso de suportes (almofadas, calçado ortopédico)">
+              <option value="">— selecione —</option>
+              <option>Proteger articulações; uso de suportes (almofadas, calçado ortopédico)</option>
+              <option>Ambiente sem obstáculos; uso de auxiliares se necessário</option>
+              <option>Priorizar equilíbrio, força e resistência funcional</option>
+              <option>Ajustar atividade à toma de medicamentos (ex: anti-hipertensivos)</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Respeitar limites físicos; evitar exposição ao desconforto social</td>
+        </tr>
+
+        <!-- ROW 7: Segurança -->
+        <tr>
+          <td class="need-label">7. Segurança</td>
+          <td class="answer-cell" data-id="7a">
+            <select data-correct="Evitar risco de quedas; supervisionar movimentos com impacto">
+              <option value="">— selecione —</option>
+              <option>Evitar risco de quedas; supervisionar movimentos com impacto</option>
+              <option>Respeitar fadiga gestacional; evitar treinos tardios</option>
+              <option>Atenção ao desconforto articular ou mamário; adaptação de movimentos</option>
+              <option>Evitar pressão sobre pavimento pélvico; pausas planeadas</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Supervisão constante; espaços seguros e apropriados</td>
+          <td class="locked">Ambiente sem obstáculos; uso de auxiliares se necessário</td>
+          <td class="answer-cell" data-id="7b">
+            <select data-correct="Evitar discriminação; garantir espaços acessíveis e seguros">
+              <option value="">— selecione —</option>
+              <option>Evitar discriminação; garantir espaços acessíveis e seguros</option>
+              <option>Adaptar horários conforme contexto de vida; garantir pausas</option>
+              <option>Considerar limitações de mobilidade ou barreiras culturais</option>
+              <option>Atividade ajustada ao grau de mobilidade e à cultura do grupo</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+        </tr>
+
+        <!-- ROW 8: Mobilidade -->
+        <tr>
+          <td class="need-label">8. Mobilidade</td>
+          <td class="locked">Atividades de baixo impacto (ex: caminhada, yoga); foco em força pélvica</td>
+          <td class="locked">Estimular coordenação e motricidade fina e grossa</td>
+          <td class="answer-cell" data-id="8a">
+            <select data-correct="Priorizar equilíbrio, força e resistência funcional">
+              <option value="">— selecione —</option>
+              <option>Priorizar equilíbrio, força e resistência funcional</option>
+              <option>Respeitar ritmo biológico; evitar esforço em horários extremos</option>
+              <option>Proteger articulações; uso de suportes (almofadas, calçado ortopédico)</option>
+              <option>Ambiente sem obstáculos; uso de auxiliares se necessário</option>
+            </select>
+            <div class="feedback-icon"></div>
+            <div class="correct-answer"></div>
+          </td>
+          <td class="locked">Atividade ajustada ao grau de mobilidade e à cultura do grupo</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-reset" onclick="resetAll()">↺ Recomeçar</button>
+    <button class="btn btn-check" onclick="checkAnswers()">✓ Verificar Respostas</button>
+  </div>
+
+</div>
+
+<script>
+  const total = document.querySelectorAll('select').length;
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('select');
+    let correct = 0;
+    let unanswered = 0;
+
+    selects.forEach(sel => {
+      const correctAnswer = sel.dataset.correct;
+      const chosen = sel.value;
+      const cell = sel.closest('td');
+      const feedbackEl = cell.querySelector('.feedback-icon');
+      const correctAnswerEl = cell.querySelector('.correct-answer');
+
+      if (!chosen) {
+        unanswered++;
+        sel.style.borderColor = '#f59e0b';
+        feedbackEl.className = 'feedback-icon';
+        feedbackEl.textContent = '';
+        correctAnswerEl.classList.remove('show');
+        return;
+      }
+
+      if (chosen === correctAnswer) {
+        correct++;
+        sel.className = 'correct';
+        cell.classList.add('correct-cell');
+        cell.classList.remove('wrong-cell');
+        feedbackEl.className = 'feedback-icon correct';
+        feedbackEl.textContent = '✓ Correto!';
+        correctAnswerEl.classList.remove('show');
+      } else {
+        sel.className = 'wrong';
+        cell.classList.add('wrong-cell');
+        cell.classList.remove('correct-cell');
+        feedbackEl.className = 'feedback-icon wrong';
+        feedbackEl.textContent = '✗ Incorreto';
+        correctAnswerEl.textContent = '✔ Resposta correta: ' + correctAnswer;
+        correctAnswerEl.classList.add('show');
+      }
+    });
+
+    const pct = Math.round((correct / total) * 100);
+    const emoji = pct === 100 ? '🏆' : pct >= 70 ? '🎯' : pct >= 50 ? '📚' : '💪';
+    const title = pct === 100 ? 'Excelente! Parabéns!' : pct >= 70 ? 'Muito bom!' : pct >= 50 ? 'Bom esforço!' : 'Continue a estudar!';
+    const sub = unanswered > 0 ? `${unanswered} questão(ões) por responder · ` : '';
+
+    const panel = document.getElementById('scorePanelTop');
+    panel.classList.add('show');
+    document.getElementById('emojiTop').textContent = emoji;
+    document.getElementById('scoreTitleTop').textContent = title;
+    document.getElementById('scoreSubTop').textContent = sub + `${correct} de ${total} respostas corretas`;
+    document.getElementById('scoreBigTop').textContent = `${correct}/${total}`;
+    document.getElementById('progressTextTop').textContent = `Pontuação: ${pct}%`;
+    document.getElementById('pctTop').textContent = `${pct}%`;
+
+    setTimeout(() => {
+      document.getElementById('scoreBarTop').style.width = pct + '%';
+    }, 100);
+
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetAll() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(sel => {
+      sel.value = '';
+      sel.className = '';
+      sel.style.borderColor = '';
+      const cell = sel.closest('td');
+      cell.classList.remove('correct-cell', 'wrong-cell');
+      const feedbackEl = cell.querySelector('.feedback-icon');
+      const correctAnswerEl = cell.querySelector('.correct-answer');
+      feedbackEl.className = 'feedback-icon';
+      feedbackEl.textContent = '';
+      correctAnswerEl.classList.remove('show');
+    });
+    document.getElementById('scorePanelTop').classList.remove('show');
+    document.getElementById('scoreBarTop').style.width = '0';
+  }
+</script>
+</body>
+</html>
